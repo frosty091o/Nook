@@ -14,22 +14,8 @@ struct NookApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TabView {
-                NavigationStack {
-                    DiscoverView()
-                }
-                .tabItem {
-                    Label("Discover", systemImage: "map")
-                }
-
-                NavigationStack {
-                    SpotsListView()
-                }
-                .tabItem {
-                    Label("List", systemImage: "list.bullet")
-                }
-            }
-            .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            RootTabView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

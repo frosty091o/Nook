@@ -9,16 +9,21 @@ import SwiftUI
 import Combine
 
 @MainActor
-final class SpotsListViewModel: ObservableObject {
+final class ListViewModel: ObservableObject {
     @Published var isLoading = false
+    @Published var items: [String] = [
+        "Campus Library",
+        "Quiet Corner Cafe",
+        "Riverside Park Benches"
+    ]
 }
 
 struct SpotsListView: View {
-    @StateObject private var vm = SpotsListViewModel()
+    @StateObject private var vm = ListViewModel()
 
     var body: some View {
-        List {
-            Text("tsesting")
+        List(vm.items, id: \.self) { item in
+            Label(item, systemImage: "mappin.and.ellipse")
         }
         .navigationTitle("List")
     }
@@ -27,4 +32,3 @@ struct SpotsListView: View {
 #Preview {
     NavigationStack { SpotsListView() }
 }
-

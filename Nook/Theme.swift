@@ -21,6 +21,14 @@ enum AppFont {
     static func caption(_ weight: Font.Weight = .regular) -> Font { .system(.caption, design: .rounded).weight(weight) }
 }
 
+enum AppSpacing {
+    static let xs: CGFloat = 4
+    static let sm: CGFloat = 8
+    static let md: CGFloat = 16
+    static let lg: CGFloat = 24
+    static let xl: CGFloat = 32
+}
+
 struct ThemedBackground: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -31,3 +39,4 @@ struct ThemedBackground: ViewModifier {
 extension View {
     func themedBackground() -> some View { modifier(ThemedBackground()) }
 }
+
