@@ -16,6 +16,7 @@ struct RootTabView: View {
             NavigationStack { SpotsListView() }
                 .tabItem { Label("List", systemImage: "list.bullet") }
         }
+        .task { SeedData.loadIfEmpty() }
     }
 }
 

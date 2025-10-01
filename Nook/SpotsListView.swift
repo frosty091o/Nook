@@ -10,7 +10,6 @@ import Combine
 
 @MainActor
 final class ListViewModel: ObservableObject {
-    @Published var isLoading = false
     @Published var items: [String] = [
         "Campus Library",
         "Quiet Corner Cafe",

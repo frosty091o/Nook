@@ -55,3 +55,22 @@ struct PersistenceController {
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
 }
+
+// MARK: - Convenience helpers
+extension PersistenceController {
+    /// Background context for writes/long operations.
+    var backgroundContext: NSManagedObjectContext {
+        let ctx = container.newBackgroundContext()
+        ctx.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        ctx.automaticallyMergesChangesFromParent = true
+        return ctx
+    }
+
+    /// Convenience save
+    func saveIfNeeded(_ context: NSManagedObjectContext) {
+        guard context.hasChanges else { return }
+        do { try context.save() } catch {
+            assertionFailure("Core Data save error: \(error)")
+        }
+    }
+}
