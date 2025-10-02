@@ -1,5 +1,5 @@
 //
-//  Untitled.swift
+//  Persistence.swift
 //  Nook
 //
 //  Created by Ethan on 2/10/2025.
@@ -15,7 +15,7 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         
-        // sample data 
+        // Add sample data for previews
         for i in 0..<3 {
             let newSpot = SavedSpot(context: viewContext)
             newSpot.id = UUID()

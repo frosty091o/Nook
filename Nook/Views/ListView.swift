@@ -1,15 +1,8 @@
 //
-//  SpotsListView.swift
-//  Nook
-//
-//  Created by Ethan on 29/9/2025.
-//
-
-//
 //  ListView.swift
 //  Nook
 //
-//  Browse list of study spots
+//  Created by Ethan on 29/9/2025.
 //
 
 import SwiftUI

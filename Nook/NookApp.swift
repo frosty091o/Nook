@@ -10,15 +10,14 @@ import CoreData
 
 @main
 struct NookApp: App {
-    // Core Data container
     let persistenceController = PersistenceController.shared
+    @StateObject private var dataManager = DataManager()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environmentObject(dataManager)
         }
     }
 }
-
-
