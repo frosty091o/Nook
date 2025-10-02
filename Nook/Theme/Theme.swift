@@ -9,6 +9,7 @@
 
 
 import SwiftUI
+import UIKit
 
 struct Theme {
     // Main colors
@@ -65,3 +66,4 @@ extension View {
         modifier(SmallGlassCard())
     }
 }
+

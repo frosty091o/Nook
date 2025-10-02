@@ -10,14 +10,16 @@ import MapKit
 
 struct MapView: View {
     // Sydney default location
-    @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(
-            latitude: -33.8688,
-            longitude: 151.2093
-        ),
-        span: MKCoordinateSpan(
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05
+    @State private var cameraPosition: MapCameraPosition = .region(
+        MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: -33.8688,
+                longitude: 151.2093
+            ),
+            span: MKCoordinateSpan(
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05
+            )
         )
     )
     
@@ -30,11 +32,12 @@ struct MapView: View {
         NavigationView {
             ZStack {
                 // Map
-                Map(coordinateRegion: $region,
-                    annotationItems: spots) { spot in
-                    MapAnnotation(coordinate: spot.coordinate) {
-                        SpotAnnotation(spot: spot) {
-                            selectedSpot = spot
+                Map(position: $cameraPosition) {
+                    ForEach(spots) { spot in
+                        Annotation(spot.name, coordinate: spot.coordinate) {
+                            SpotAnnotation(spot: spot) {
+                                selectedSpot = spot
+                            }
                         }
                     }
                 }
