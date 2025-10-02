@@ -4,9 +4,8 @@
 //
 //  Created by Ethan on 29/9/2025.
 //
-
+//
 import SwiftUI
-import CoreData
 
 @main
 struct NookApp: App {
