@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ListView: View {
+    @EnvironmentObject var dataManager: DataManager
     @State private var searchText = ""
     @State private var selectedFilter = "All"
     
@@ -49,8 +50,17 @@ struct ListView: View {
                     ScrollView {
                         VStack(spacing: 12) {
                             ForEach(filteredSpots) { spot in
-                                NavigationLink(destination: SpotDetailView(spot: spot)) {
-                                    SpotCard(spot: spot)
+                                NavigationLink(destination:
+                                    SpotDetailView(spot: spot)
+                                        .environmentObject(dataManager)
+                                ) {
+                                    SpotCard(
+                                        spot: spot,
+                                        isSaved: dataManager.isSpotSaved(spot),
+                                        onSaveToggle: {
+                                            dataManager.toggleFavorite(spot)
+                                        }
+                                    )
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
@@ -65,29 +75,13 @@ struct ListView: View {
     }
 }
 
-// Filter tab button
-struct FilterTab: View {
-    let title: String
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(.subheadline)
-                .fontWeight(isSelected ? .semibold : .regular)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(isSelected ? Theme.mainBlue : Theme.glassGray)
-                .foregroundColor(isSelected ? .white : .primary)
-                .clipShape(Capsule())
-        }
-    }
-}
-
-// Spot card
+// Updated Spot card with save button
 struct SpotCard: View {
     let spot: StudySpot
+    let isSaved: Bool
+    let onSaveToggle: () -> Void
+    
+    @State private var showingSaved = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -182,17 +176,66 @@ struct SpotCard: View {
                 }
                 
                 // Favorite button
-                Button(action: {}) {
-                    Image(systemName: "heart")
-                        .foregroundColor(.gray)
+                Button(action: {
+                    withAnimation(.spring(response: 0.3)) {
+                        onSaveToggle()
+                        showingSaved = true
+                        
+                        // Hide message after delay
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            showingSaved = false
+                        }
+                    }
+                }) {
+                    Image(systemName: isSaved ? "heart.fill" : "heart")
+                        .foregroundColor(isSaved ? .red : .gray)
+                        .scaleEffect(isSaved ? 1.1 : 1.0)
                 }
             }
             .padding()
         }
         .glassCard()
+        .overlay(
+            // Saved confirmation
+            Group {
+                if showingSaved && isSaved {
+                    Text("Saved!")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Theme.mainBlue)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                        .transition(.scale.combined(with: .opacity))
+                        .position(x: UIScreen.main.bounds.width / 2, y: 20)
+                }
+            }
+        )
+    }
+}
+
+// Filter tab button
+struct FilterTab: View {
+    let title: String
+    let isSelected: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(isSelected ? .semibold : .regular)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(isSelected ? Theme.mainBlue : Theme.glassGray)
+                .foregroundColor(isSelected ? .white : .primary)
+                .clipShape(Capsule())
+        }
     }
 }
 
 #Preview {
     ListView()
+        .environmentObject(DataManager())
 }

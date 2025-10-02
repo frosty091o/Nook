@@ -5,13 +5,6 @@
 //  Created by Ethan on 2/10/2025.
 //
 
-//
-//  SavedView.swift
-//  Nook
-//
-//  Saved spots with Core Data
-//
-
 import SwiftUI
 import CoreData
 
