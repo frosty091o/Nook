@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  Nook
 //
-//  Created by Ethan on 29/9/2025.
+//  Created by Ethan on 2/10/2025.
 //
 
 import SwiftUI
@@ -11,7 +11,7 @@ struct ContentView: View {
     @State private var selectedTab = 0
     
     init() {
-        // Customise tab bar appearance
+        // Customize tab bar appearance
         let appearance = UITabBarAppearance()
         appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
         appearance.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.3)

@@ -6,11 +6,7 @@
 //  Created by Ethan on 29/9/2025.
 //
 //
-//  Theme.swift
-//  Nook
-//
-//  App theme with iOS 18 glass effects
-//
+
 
 import SwiftUI
 
