@@ -1,5 +1,5 @@
 //
-//  RootTabView.swift
+//  MapView.swift
 //  Nook
 //
 //  Created by Ethan on 1/10/2025.
@@ -9,6 +9,8 @@ import SwiftUI
 import MapKit
 
 struct MapView: View {
+    @EnvironmentObject var dataManager: DataManager
+    
     // Sydney default location
     @State private var cameraPosition: MapCameraPosition = .region(
         MKCoordinateRegion(
@@ -41,6 +43,7 @@ struct MapView: View {
                         }
                     }
                 }
+                .mapStyle(.standard)
                 .ignoresSafeArea(edges: .bottom)
                 
                 // Top controls
@@ -83,9 +86,16 @@ struct MapView: View {
                 if let spot = selectedSpot {
                     VStack {
                         Spacer()
-                        SpotMapCard(spot: spot) {
-                            selectedSpot = nil
-                        }
+                        SpotMapCard(
+                            spot: spot,
+                            isSaved: dataManager.isSpotSaved(spot),
+                            onSave: {
+                                dataManager.toggleFavorite(spot)
+                            },
+                            onClose: {
+                                selectedSpot = nil
+                            }
+                        )
                         .padding()
                         .transition(.move(edge: .bottom))
                     }
@@ -139,9 +149,11 @@ struct FilterChip: View {
     }
 }
 
-// Spot card on map
+// Updated Spot card on map with save functionality
 struct SpotMapCard: View {
     let spot: StudySpot
+    let isSaved: Bool
+    let onSave: () -> Void
     let onClose: () -> Void
     
     var body: some View {
@@ -218,10 +230,11 @@ struct SpotMapCard: View {
                 }
                 .buttonStyle(.borderedProminent)
                 
-                Button(action: {}) {
-                    Label("Save", systemImage: "heart")
+                Button(action: onSave) {
+                    Label(isSaved ? "Saved" : "Save", systemImage: isSaved ? "heart.fill" : "heart")
                         .font(.caption)
                         .frame(maxWidth: .infinity)
+                        .foregroundColor(isSaved ? .red : Theme.mainBlue)
                 }
                 .buttonStyle(.bordered)
             }
@@ -233,4 +246,5 @@ struct SpotMapCard: View {
 
 #Preview {
     MapView()
+        .environmentObject(DataManager())
 }

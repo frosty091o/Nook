@@ -199,23 +199,24 @@ struct SpotCard: View {
             // Saved confirmation
             Group {
                 if showingSaved && isSaved {
-                    Text("Saved!")
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Theme.mainBlue)
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
-                        .transition(.scale.combined(with: .opacity))
-                        .position(x: UIScreen.main.bounds.width / 2, y: 20)
+                    GeometryReader { geometry in
+                        Text("Saved!")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Theme.mainBlue)
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                            .transition(.scale.combined(with: .opacity))
+                            .position(x: geometry.size.width / 2, y: 20)
+                    }
                 }
             }
         )
     }
 }
 
-// Filter tab button
 struct FilterTab: View {
     let title: String
     let isSelected: Bool

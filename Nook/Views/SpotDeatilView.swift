@@ -1,5 +1,5 @@
 //
-//  SpotDeatilView.swift
+//  SpotDetailView.swift
 //  Nook
 //
 //  Created by Ethan on 2/10/2025.
@@ -10,6 +10,7 @@ import MapKit
 
 struct SpotDetailView: View {
     let spot: StudySpot
+    @EnvironmentObject var dataManager: DataManager
     @State private var isFavorite = false
     @State private var showingReviews = false
     @State private var showingDirections = false
@@ -63,6 +64,7 @@ struct SpotDetailView: View {
                             Button(action: {
                                 withAnimation {
                                     isFavorite.toggle()
+                                    dataManager.toggleFavorite(spot)
                                 }
                             }) {
                                 Image(systemName: isFavorite ? "heart.fill" : "heart")
@@ -221,26 +223,33 @@ struct SpotDetailView: View {
         }
         .ignoresSafeArea(edges: .top)
         .navigationBarHidden(true)
+        .onAppear {
+            isFavorite = dataManager.isSpotSaved(spot)
+        }
     }
 }
 
-// Mini map view
+// Mini map view - Updated for iOS 17
 struct MiniMapView: View {
     let spot: StudySpot
-    @State private var region: MKCoordinateRegion
+    @State private var position: MapCameraPosition
     
     init(spot: StudySpot) {
         self.spot = spot
-        self._region = State(initialValue: MKCoordinateRegion(
-            center: spot.coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        self._position = State(initialValue: .region(
+            MKCoordinateRegion(
+                center: spot.coordinate,
+                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+            )
         ))
     }
     
     var body: some View {
-        Map(coordinateRegion: $region, annotationItems: [spot]) { spot in
-            MapMarker(coordinate: spot.coordinate, tint: spot.type.color)
+        Map(position: $position) {
+            Marker(spot.name, coordinate: spot.coordinate)
+                .tint(spot.type.color)
         }
+        .mapStyle(.standard)
         .disabled(true)
     }
 }
@@ -285,4 +294,5 @@ struct TipRow: View {
 
 #Preview {
     SpotDetailView(spot: StudySpot.samples[0])
+        .environmentObject(DataManager())
 }
